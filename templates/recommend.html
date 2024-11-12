@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recomendar Películas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 400px; /* Increased width */
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            font-size: 18px; /* Increased font size */
+            margin-right: 500px;
+        }
+
+        .sidebar h1 {
+            margin-top: 20px;
+            font-size: 50px; /* Increased font size for the sidebar heading */
+            color: rgba(206, 206, 206, 0.829);
+            margin-bottom: 100px;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            font-size: 40px; /* Increased font size for the sidebar links */
+            margin-bottom: 30px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+
+        .sidebar ul li a:hover {
+            background-color: #555;
+        }
+
+        .content {
+            margin-left: 1000px;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .content h1{
+            font-size: 50px; /* Increased font size for the sidebar heading */
+        }
+
+        .content h2{
+            margin-top: 50px;
+            font-size: 40px; /* Increased font size for the sidebar heading */
+        }
+
+        .movie-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
+            grid-gap: 20px;
+        }
+
+        .movie {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .movie img {
+            width: 100%;
+        }
+
+        .movie h3 {
+            margin-top: 10px;
+            font-size: 25px;
+        }
+
+        .star {
+            color: #FFD700;
+            cursor: pointer;
+            font-size: 3em;
+        }
+
+        .secondary {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            width: 20%; /* Increased width */
+            margin-left: 750px; /* Centered horizontally */
+            height: 80px;
+            margin-top: 75px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h1>Menu</h1>
+        <ul>
+            <li><a href="/recommend">Recomendar</a></li>
+            <li><a href="/my-recommendations">Mis Recomendaciones</a></li>
+            <li><a href="/logout">Cerrar Sesión</a></li>
+        </ul>
+    </div>
+
+    <main class="content">
+        <h1>Califica estas películas</h1>
+        <div id="movies" class="movie-container">
+            {% for movie in movies %}
+            <div class="movie">
+                <img src="{{ movie.poster }}" alt="{{ movie.title }}" width="150">
+                <h3>{{ movie.title }} ({{ movie.year }})</h3>
+                <div id="rating-{{ movie.imdbId }}">
+                    {% for star in range(1, 6) %}
+                    <span class="star" onclick="rateMovie('{{ movie.imdbId }}', {{ star }})">★</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="secondary" onclick="submitRatings()">Obtener recomendaciones</button>
+
+        <h2>Películas recomendadas</h2>
+        <div id="recommendations" class="movie-container"></div>
+    </main>
+
+    <script>
+        let ratings = {};
+
+        // Rate movie and highlight selected stars
+        function rateMovie(movieId, rating) {
+            ratings[movieId] = rating;
+            const ratingDiv = document.getElementById(`rating-${movieId}`);
+            Array.from(ratingDiv.children).forEach((star, index) => {
+                star.style.color = index < rating ? 'orange' : '#FFD700';
+            });
+        }
+
+        // Submit ratings and fetch recommendations
+        async function submitRatings() {
+            const response = await fetch('/recommendations', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(ratings)
+            });
+            const recommendations = await response.json();
+            displayRecommendations(recommendations);
+        }
+
+        // Display recommended movies
+        function displayRecommendations(recommendations) {
+            const recDiv = document.getElementById('recommendations');
+            recDiv.innerHTML = '';
+            recommendations.forEach(movie => {
+                const div = document.createElement('div');
+                div.className = 'movie';
+                div.innerHTML = `
+                    <img src="${movie.poster}" alt="${movie.title}" width="150">
+                    <h3>${movie.title} (${movie.year})</h3>
+                    <p>${movie.plot || 'No plot available'}</p>
+                `;
+                recDiv.appendChild(div);
+            });
+        }
+
+        document.querySelector('.sidebar ul li:last-child a').addEventListener('click', function(event) {
+            event.preventDefault();
+            sessionStorage.clear();
+            window.location.href = '/login';
+        });
+    </script>
+</body>
+
+</html>

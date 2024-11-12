@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Películas recomendadas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .main {
+            padding: 20px;
+        }
+
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .movie-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .movie-card {
+            width: calc(100% / 5 - 10px);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .movie-card h2 {
+            margin-top: 10px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 400px; /* Increased width */
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            font-size: 18px; /* Increased font size */
+            margin-right: 500px;
+        }
+
+        .sidebar h1 {
+            margin-top: 20px;
+            font-size: 50px; /* Increased font size for the sidebar heading */
+            color: rgba(206, 206, 206, 0.829);
+            margin-bottom: 100px;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            font-size: 40px; /* Increased font size for the sidebar links */
+            margin-bottom: 30px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+
+        .sidebar ul li a:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h1>Menu</h1>
+        <ul>
+            <li><a href="/recommend">Recomendar</a></li>
+            <li><a href="/my-recommendations">Mis Recomendaciones</a></li>
+            <li><a href="/logout">Cerrar Sesión</a></li>
+        </ul>
+    </div>
+    <div class="container">
+        <header class="header">
+            <h1>Mis películas recomendadas</h1>
+        </header>
+        <main class="main">
+            <div class="movie-list">
+                {% for movie in movies %}
+                <div class="movie-card">
+                    <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+                    <h2>{{ movie.title }} ({{ movie.year }})</h2>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+</body>
+<script>
+    document.querySelector('.sidebar ul li:last-child a').addEventListener('click', function(event) {
+        event.preventDefault();
+        sessionStorage.clear();
+        window.location.href = '/login';
+    });
+</script>
+
+</html>
+
