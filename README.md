@@ -3,6 +3,9 @@
 
 Este proyecto es una aplicación web de recomendaciones de películas desarrollada en Python usando Flask, Scikit-Learn y SQLite. Permite a los usuarios registrarse, iniciar sesión y recibir recomendaciones de películas personalizadas en función de calificaciones de otros usuarios y el género, título y año de lanzamiento de cada película. Además, utiliza la API de OMDb (versión abierta de IMDb) para obtener detalles adicionales de las películas.
 
+[Para una documentación más ampliada del proyecto consultar aquí](Documentación%20TPI%20-%20Grupo%207%20-%20Soporte%202024.pdf)
+
+
 ## Estructura del Proyecto
 
 ```
