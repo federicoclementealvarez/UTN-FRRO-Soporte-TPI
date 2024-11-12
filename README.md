@@ -51,13 +51,17 @@ UTN_SOPORTE_PRUEBA_TPI/
    ```bash
    git clone https://github.com/federicoclementealvarez/UTN-FRRO-Soporte-TPI.git
    ```
-   
 2. Instalar las dependencias:
    ```bash
    pip install -r requirements.txt
    ```
-   
-3. Iniciar la aplicación:
+3. Setear una API KEY de OMDb en el env local:
+
+   Se deberá crear un archivo .env que contenga la siguiente línea: (reemplazando "my_apy_key_here" por su API KEY de OMDb personal)
+   ```
+   OMDB_API_KEY=my_api_key_here
+   ```
+ 4. Iniciar la aplicación:
    ```bash
    python app.py
    ```
